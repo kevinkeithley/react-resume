@@ -14,7 +14,7 @@ export default function EducationSection({ educationData, setEducationData }) {
         description: '',
     });
 
-    const [isFormVisible, setIsFormVisible] = useState(false); // Toggle for showing/hiding the form
+    const [isFormVisible, setIsFormVisible] = useState(false);
 
     const handleEducationChange = (e) => {
         const { name, value } = e.target;
@@ -34,7 +34,7 @@ export default function EducationSection({ educationData, setEducationData }) {
             city: '',
             grade: '',
             description: '',
-        }); // Reset the form after adding
+        });
     };
 
     const handleEditEducation = (index, updatedEducation) => {
@@ -45,14 +45,14 @@ export default function EducationSection({ educationData, setEducationData }) {
     };
 
     const moveEducationUp = (index) => {
-        if (index === 0) return; // Cannot move the first item up
+        if (index === 0) return;
         const updatedEducation = [...educationData];
         [updatedEducation[index - 1], updatedEducation[index]] = [updatedEducation[index], updatedEducation[index - 1]];
         setEducationData(updatedEducation);
     };
 
     const moveEducationDown = (index) => {
-        if (index === educationData.length - 1) return; // Cannot move the last item down
+        if (index === educationData.length - 1) return;
         const updatedEducation = [...educationData];
         [updatedEducation[index + 1], updatedEducation[index]] = [updatedEducation[index], updatedEducation[index + 1]];
         setEducationData(updatedEducation);
@@ -63,12 +63,11 @@ export default function EducationSection({ educationData, setEducationData }) {
     };
 
     return (
-        <Box>
-            <Typography variant="h5" component="h2" gutterBottom>
+        <Box sx={{ mb: 4 }}>
+            <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
                 Education
             </Typography>
 
-            {/* Display Existing Education Entries */}
             {educationData.map((edu, index) => (
                 <Box key={index} mb={2} sx={{ border: '1px solid #ccc', p: 2, borderRadius: 2 }}>
                     <Grid container spacing={2}>
@@ -81,6 +80,7 @@ export default function EducationSection({ educationData, setEducationData }) {
                                     handleEditEducation(index, { ...edu, start_year: e.target.value })
                                 }
                                 fullWidth
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -92,6 +92,7 @@ export default function EducationSection({ educationData, setEducationData }) {
                                     handleEditEducation(index, { ...edu, end_year: e.target.value })
                                 }
                                 fullWidth
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -103,6 +104,7 @@ export default function EducationSection({ educationData, setEducationData }) {
                                     handleEditEducation(index, { ...edu, degree: e.target.value })
                                 }
                                 fullWidth
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -114,6 +116,7 @@ export default function EducationSection({ educationData, setEducationData }) {
                                     handleEditEducation(index, { ...edu, institution: e.target.value })
                                 }
                                 fullWidth
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -125,6 +128,7 @@ export default function EducationSection({ educationData, setEducationData }) {
                                     handleEditEducation(index, { ...edu, city: e.target.value })
                                 }
                                 fullWidth
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -136,6 +140,7 @@ export default function EducationSection({ educationData, setEducationData }) {
                                     handleEditEducation(index, { ...edu, grade: e.target.value })
                                 }
                                 fullWidth
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -149,23 +154,23 @@ export default function EducationSection({ educationData, setEducationData }) {
                                 fullWidth
                                 multiline
                                 rows={3}
+                                sx={{ mb: 2 }}
                             />
                         </Grid>
 
-                        {/* Move Up / Down Buttons */}
-                        <Grid item xs={12} sm={6} display="flex" justifyContent="space-between">
+                        <Grid item xs={12} display="flex" justifyContent="space-between">
                             <Button
                                 variant="contained"
                                 onClick={() => moveEducationUp(index)}
-                                disabled={index === 0} // Disable if it's the first entry
-                                sx={{ mr: 1 }} // Add margin to the right of the Move Up button
+                                disabled={index === 0}
+                                sx={{ mr: 1 }}
                             >
                                 Move Up
                             </Button>
                             <Button
                                 variant="contained"
                                 onClick={() => moveEducationDown(index)}
-                                disabled={index === educationData.length - 1} // Disable if it's the last entry
+                                disabled={index === educationData.length - 1}
                             >
                                 Move Down
                             </Button>
@@ -174,17 +179,15 @@ export default function EducationSection({ educationData, setEducationData }) {
                 </Box>
             ))}
 
-            {/* Expand/Collapse Button for Add New Education Form */}
             <Button
                 variant="outlined"
                 onClick={toggleFormVisibility}
                 startIcon={isFormVisible ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                sx={{ mt: 2, mb: 2 }}
+                sx={{ mt: 2 }}
             >
                 {isFormVisible ? 'Hide Add Education Form' : 'Show Add Education Form'}
             </Button>
 
-            {/* Form to Add New Education */}
             {isFormVisible && (
                 <Box>
                     <TextField

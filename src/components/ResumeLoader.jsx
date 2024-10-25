@@ -1,9 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, MenuItem, Select, Button } from '@mui/material';
+import { getAllRoles } from '../utils/db'; // Import the getAllRoles function from db.js
 
-export default function ResumeLoader({ roles, setFormData }) {
+export default function ResumeLoader({ setFormData }) {
+    const [roles, setRoles] = useState([]); // We'll fetch roles from IndexedDB
     const [selectedRole, setSelectedRole] = useState('');
     const [selectedVersion, setSelectedVersion] = useState('');
+
+    // Fetch roles from IndexedDB when the component mounts
+    useEffect(() => {
+        const fetchRoles = async () => {
+            const allRoles = await getAllRoles();
+            setRoles(allRoles);
+        };
+        fetchRoles();
+    }, []);
 
     const handleLoadResume = () => {
         if (!selectedRole || !selectedVersion) {
@@ -11,13 +22,18 @@ export default function ResumeLoader({ roles, setFormData }) {
             return;
         }
 
-        // Get the selected resume data
-        const selectedResumeData = roles
-            .find(role => role.role_name === selectedRole)
-            .resume_versions.find(version => version.version_number === parseInt(selectedVersion))
-            .resume_data;
+        // Get the selected role and version data
+        const selectedRoleData = roles.find(role => role.role_name === selectedRole);
+        const selectedVersionData = selectedRoleData.resume_versions.find(
+            version => version.version_name === selectedVersion
+        );
 
-        setFormData(selectedResumeData); // Load the form data with the selected version
+        if (!selectedVersionData) {
+            alert('Selected version not found.');
+            return;
+        }
+
+        setFormData(selectedVersionData.resume_data); // Load the form data with the selected version
     };
 
     return (
@@ -25,7 +41,10 @@ export default function ResumeLoader({ roles, setFormData }) {
             {/* Select Role Dropdown */}
             <Select
                 value={selectedRole}
-                onChange={(e) => setSelectedRole(e.target.value)}
+                onChange={(e) => {
+                    setSelectedRole(e.target.value);
+                    setSelectedVersion(''); // Reset selected version when role changes
+                }}
                 displayEmpty
                 fullWidth
                 sx={{ mb: 2 }}
@@ -54,8 +73,8 @@ export default function ResumeLoader({ roles, setFormData }) {
                     </MenuItem>
                     {roles
                         .find(role => role.role_name === selectedRole)
-                        .resume_versions.map((version, index) => (
-                            <MenuItem key={index} value={version.version_number}>
+                        ?.resume_versions?.map((version, index) => (
+                            <MenuItem key={index} value={version.version_name}>
                                 {version.version_name || `Version ${version.version_number}`}
                             </MenuItem>
                         ))}

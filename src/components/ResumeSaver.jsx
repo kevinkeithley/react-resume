@@ -1,24 +1,29 @@
 import React, { useState } from 'react';
 import { Button, Box, MenuItem, Select, TextField } from '@mui/material';
+import { updateRole } from '../utils/db'; // Import updateRole from db.js
 
 export default function ResumeSaver({ roles, formData, setRoles }) {
     const [selectedRole, setSelectedRole] = useState('');
     const [versionName, setVersionName] = useState('');
 
-    const handleSaveResume = () => {
+    const handleSaveResume = async () => {
         if (!selectedRole) {
             alert('Please select a role.');
             return;
         }
 
-        // Find the selected role and append a new version
+        // Find the selected role and ensure resume_versions is initialized
         const updatedRoles = roles.map((role) => {
             if (role.role_name === selectedRole) {
-                const newVersionNumber = role.resume_versions.length + 1;
-                return {
+                // Ensure resume_versions exists and is an array
+                const resumeVersions = role.resume_versions || [];
+                const newVersionNumber = resumeVersions.length + 1;
+
+                // Add new resume version
+                const newRole = {
                     ...role,
                     resume_versions: [
-                        ...role.resume_versions,
+                        ...resumeVersions, // Spread existing resume_versions
                         {
                             version_number: newVersionNumber,
                             version_name: versionName || `Version ${newVersionNumber}`,
@@ -27,12 +32,18 @@ export default function ResumeSaver({ roles, formData, setRoles }) {
                         },
                     ],
                 };
+
+                // Save updated role with new resume version to IndexedDB
+                updateRole(role.id, newRole); // Save the updated role to IndexedDB
+
+                return newRole;
             }
             return role;
         });
 
-        setRoles(updatedRoles);
+        setRoles(updatedRoles); // Update the roles in state
         setVersionName('');  // Reset version name after saving
+
         alert('Resume version saved successfully!');
     };
 

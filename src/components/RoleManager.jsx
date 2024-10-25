@@ -2,46 +2,73 @@ import React, { useState, useEffect } from 'react';
 import { Button, TextField, List, ListItem, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { addRole, getAllRoles, updateRole, deleteRole } from '../utils/db'; // Import the IndexedDB functions
 
 export default function RoleManager({ roles, setRoles }) {
     const [newRole, setNewRole] = useState('');
     const [editRoleIndex, setEditRoleIndex] = useState(null);
     const [editRoleValue, setEditRoleValue] = useState('');
 
-    // Load roles from localStorage when the component mounts
+    // Load roles from IndexedDB when the component mounts
     useEffect(() => {
-        const savedRoles = JSON.parse(localStorage.getItem('roles'));
-        if (savedRoles) {
-            setRoles(savedRoles);
+        const loadRoles = async () => {
+            const storedRoles = await getAllRoles();
+            setRoles(storedRoles);
+        };
+        loadRoles();
+    }, [setRoles]);
+
+    const handleAddRole = async () => {
+        if (newRole.trim() === '') {
+            alert('Role name cannot be empty.');
+            return;
         }
-    }, []);
 
-    // Save roles to localStorage whenever the roles state changes
-    useEffect(() => {
-        localStorage.setItem('roles', JSON.stringify(roles));
-    }, [roles]);
+        const newRoleData = { role_name: newRole, resume_versions: [] };
 
-    const handleAddRole = () => {
-        setRoles([...roles, newRole]);
-        setNewRole('');
+        // Save the new role in IndexedDB
+        await addRole(newRoleData);
+
+        // Fetch all roles from IndexedDB to get the updated list (with the new role's ID)
+        const updatedRoles = await getAllRoles();
+        setRoles(updatedRoles);
+
+        setNewRole('');  // Reset input field
     };
 
-    const handleDeleteRole = (index) => {
-        setRoles(roles.filter((_, i) => i !== index));
+
+    const handleDeleteRole = async (index) => {
+        const roleToDelete = roles[index];
+
+        // Delete the role from IndexedDB
+        await deleteRole(roleToDelete.id);
+
+        // Fetch the updated list of roles from IndexedDB after deletion
+        const updatedRoles = await getAllRoles();
+        setRoles(updatedRoles);
     };
+
 
     const handleEditRole = (index) => {
         setEditRoleIndex(index);
-        setEditRoleValue(roles[index]);
+        setEditRoleValue(roles[index].role_name);
     };
 
-    const handleUpdateRole = () => {
+    const handleUpdateRole = async () => {
         const updatedRoles = [...roles];
-        updatedRoles[editRoleIndex] = editRoleValue;
-        setRoles(updatedRoles);
+        updatedRoles[editRoleIndex].role_name = editRoleValue;
+
+        // Update the role in IndexedDB
+        await updateRole(updatedRoles[editRoleIndex].id, updatedRoles[editRoleIndex]);
+
+        // Fetch the updated list of roles from IndexedDB after updating
+        const allRoles = await getAllRoles();
+        setRoles(allRoles);
+
         setEditRoleIndex(null);
-        setEditRoleValue('');
+        setEditRoleValue('');  // Reset edit field
     };
+
 
     return (
         <Box>
@@ -65,7 +92,7 @@ export default function RoleManager({ roles, setRoles }) {
                                 fullWidth
                             />
                         ) : (
-                            <span>{role}</span>
+                            <span>{role.role_name}</span>  // Display the role_name
                         )}
 
                         {editRoleIndex === index ? (
