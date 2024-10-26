@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Box, Grid, Typography } from '@mui/material';
+import { Tabs, Tab, Box, Grid, Typography, Button } from '@mui/material';
 import PersonalInfoForm from './components/PersonalInfoForm';
 import EducationSection from './components/EducationSection';
 import RoleManager from './components/RoleManager';
 import ResumeSaver from './components/ResumeSaver';
 import ResumeLoader from './components/ResumeLoader';
 import ApplicationsManager from './components/ApplicationsManager';
+import { downloadJson } from './utils/downloadJson'; // Import the download function
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState(0);
@@ -31,6 +32,11 @@ export default function App() {
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
+  };
+
+  const handleDownload = () => {
+    // Call the downloadJson function and pass in the current form data
+    downloadJson(formData);
   };
 
   return (
@@ -88,6 +94,11 @@ export default function App() {
           <Box>
             <ResumeSaver roles={roles} formData={formData} setRoles={setRoles} />
             <ResumeLoader roles={roles} setFormData={setFormData} />
+
+            {/* Button to download JSON */}
+            <Button variant="contained" color="primary" onClick={handleDownload} sx={{ mt: 2 }}>
+              Download Current Data
+            </Button>
           </Box>
         )}
 
