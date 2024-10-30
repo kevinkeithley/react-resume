@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, Tab, Box, Grid, Typography, Button } from '@mui/material';
 import PersonalInfoForm from './components/PersonalInfoForm';
 import EducationSection from './components/EducationSection';
+import ExperienceSection from './components/ExperienceSection';
 import RoleManager from './components/RoleManager';
 import ResumeSaver from './components/ResumeSaver';
 import ResumeLoader from './components/ResumeLoader';
@@ -26,6 +27,7 @@ export default function App() {
       gitlab: '',
     },
     education: [],
+    experience: [],
   });
   const [roles, setRoles] = useState([]); // Roles for resumes
   const [applications, setApplications] = useState([]); // Job applications
@@ -81,6 +83,14 @@ export default function App() {
               </Grid>
             </Grid>
 
+            <Box sx={{ mt: 4 }}>
+              <ExperienceSection
+                experienceData={formData.experience}
+                setExperienceData={(data) => setFormData({ ...formData, experience: data })}
+              />
+            </Box>
+
+
             {/* JSON Summary */}
             <Box sx={{ mt: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
               <Typography variant="h6">Current Form Data (JSON):</Typography>
@@ -88,6 +98,8 @@ export default function App() {
             </Box>
           </Box>
         )}
+
+
 
         {/* Save/Load Tab */}
         {currentTab === 2 && (
