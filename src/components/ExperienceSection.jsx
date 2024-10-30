@@ -247,14 +247,18 @@ export default function ExperienceSection({ experienceData, setExperienceData })
             {/* Display the list of experiences */}
             <Grid container spacing={3}>
                 {experienceData.map((job, experienceIndex) => (
-                    <Grid item xs={12} key={experienceIndex}>
-                        <Card>
-                            <CardContent>
+                    <Grid item xs={12} md={6} key={experienceIndex}>
+                        <Card sx={{ height: '100%' }}>
+                            <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                 <Grid container justifyContent="space-between" alignItems="center">
                                     <Grid item>
                                         <Typography variant="h6">{job.job_title}</Typography>
-                                        <Typography variant="body1">{job.employer}, {job.city}</Typography>
-                                        <Typography variant="body2">{job.start_year} - {job.end_year}</Typography>
+                                        <Typography variant="body1">
+                                            {job.employer}, {job.city}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            {job.start_year} - {job.end_year}
+                                        </Typography>
                                     </Grid>
                                     <Grid item>
                                         <IconButton onClick={() => moveExperienceUp(experienceIndex)}>
@@ -269,10 +273,14 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                     </Grid>
                                 </Grid>
 
-                                <Typography variant="body2" gutterBottom>{job.description}</Typography>
+                                <Typography variant="body2" gutterBottom>
+                                    {job.description}
+                                </Typography>
 
                                 {/* Achievements */}
-                                <Typography variant="body2" sx={{ mt: 2 }}>Achievements:</Typography>
+                                <Typography variant="body2" sx={{ mt: 2 }}>
+                                    Achievements:
+                                </Typography>
                                 <List>
                                     {job.achievements.map((achievement, achievementIndex) => (
                                         <ListItem key={achievementIndex} alignItems="flex-start">
@@ -282,18 +290,36 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                         <TextField
                                                             fullWidth
                                                             value={achievement.text}
-                                                            onChange={(e) => handleAchievementChange(experienceIndex, achievementIndex, e.target.value)}
+                                                            onChange={(e) =>
+                                                                handleAchievementChange(
+                                                                    experienceIndex,
+                                                                    achievementIndex,
+                                                                    e.target.value
+                                                                )
+                                                            }
                                                             placeholder="Achievement Text"
                                                         />
                                                     </Grid>
                                                     <Grid item>
-                                                        <IconButton onClick={() => moveAchievementUp(experienceIndex, achievementIndex)}>
+                                                        <IconButton
+                                                            onClick={() =>
+                                                                moveAchievementUp(experienceIndex, achievementIndex)
+                                                            }
+                                                        >
                                                             <ArrowUpwardIcon />
                                                         </IconButton>
-                                                        <IconButton onClick={() => moveAchievementDown(experienceIndex, achievementIndex)}>
+                                                        <IconButton
+                                                            onClick={() =>
+                                                                moveAchievementDown(experienceIndex, achievementIndex)
+                                                            }
+                                                        >
                                                             <ArrowDownwardIcon />
                                                         </IconButton>
-                                                        <IconButton onClick={() => deleteAchievement(experienceIndex, achievementIndex)}>
+                                                        <IconButton
+                                                            onClick={() =>
+                                                                deleteAchievement(experienceIndex, achievementIndex)
+                                                            }
+                                                        >
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Grid>
@@ -308,18 +334,49 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                                     <TextField
                                                                         fullWidth
                                                                         value={sub.text}
-                                                                        onChange={(e) => handleSubAchievementChange(experienceIndex, achievementIndex, subIndex, e.target.value)}
+                                                                        onChange={(e) =>
+                                                                            handleSubAchievementChange(
+                                                                                experienceIndex,
+                                                                                achievementIndex,
+                                                                                subIndex,
+                                                                                e.target.value
+                                                                            )
+                                                                        }
                                                                         placeholder="Sub-Achievement Text"
                                                                     />
                                                                 </Grid>
                                                                 <Grid item>
-                                                                    <IconButton onClick={() => moveSubAchievementUp(experienceIndex, achievementIndex, subIndex)}>
+                                                                    <IconButton
+                                                                        onClick={() =>
+                                                                            moveSubAchievementUp(
+                                                                                experienceIndex,
+                                                                                achievementIndex,
+                                                                                subIndex
+                                                                            )
+                                                                        }
+                                                                    >
                                                                         <ArrowUpwardIcon />
                                                                     </IconButton>
-                                                                    <IconButton onClick={() => moveSubAchievementDown(experienceIndex, achievementIndex, subIndex)}>
+                                                                    <IconButton
+                                                                        onClick={() =>
+                                                                            moveSubAchievementDown(
+                                                                                experienceIndex,
+                                                                                achievementIndex,
+                                                                                subIndex
+                                                                            )
+                                                                        }
+                                                                    >
                                                                         <ArrowDownwardIcon />
                                                                     </IconButton>
-                                                                    <IconButton onClick={() => deleteSubAchievement(experienceIndex, achievementIndex, subIndex)}>
+                                                                    <IconButton
+                                                                        onClick={() =>
+                                                                            deleteSubAchievement(
+                                                                                experienceIndex,
+                                                                                achievementIndex,
+                                                                                subIndex
+                                                                            )
+                                                                        }
+                                                                    >
                                                                         <DeleteIcon />
                                                                     </IconButton>
                                                                 </Grid>
@@ -327,7 +384,11 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                         </ListItem>
                                                     ))}
                                                     <ListItem>
-                                                        <Button onClick={() => addSubAchievement(experienceIndex, achievementIndex)}>
+                                                        <Button
+                                                            onClick={() =>
+                                                                addSubAchievement(experienceIndex, achievementIndex)
+                                                            }
+                                                        >
                                                             Add Sub-Achievement
                                                         </Button>
                                                     </ListItem>
@@ -336,7 +397,9 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                         </ListItem>
                                     ))}
                                     <ListItem>
-                                        <Button onClick={() => addAchievement(experienceIndex)}>Add Achievement</Button>
+                                        <Button onClick={() => addAchievement(experienceIndex)}>
+                                            Add Achievement
+                                        </Button>
                                     </ListItem>
                                 </List>
                             </CardContent>
