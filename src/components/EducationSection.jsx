@@ -1,7 +1,20 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Box, Grid } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import {
+    Button,
+    TextField,
+    Typography,
+    Box,
+    Grid,
+    Card,
+    CardContent,
+    IconButton,
+} from '@mui/material';
+import {
+    ArrowUpward as ArrowUpwardIcon,
+    ArrowDownward as ArrowDownwardIcon,
+    Delete as DeleteIcon,
+    Edit as EditIcon,
+} from '@mui/icons-material';
 
 export default function EducationSection({ educationData, setEducationData }) {
     const [newEducation, setNewEducation] = useState({
@@ -14,8 +27,19 @@ export default function EducationSection({ educationData, setEducationData }) {
         description: '',
     });
 
-    const [isFormVisible, setIsFormVisible] = useState(false);
+    // State variables for editing education entries
+    const [editingIndex, setEditingIndex] = useState(null);
+    const [editedEducation, setEditedEducation] = useState({
+        start_year: '',
+        end_year: '',
+        degree: '',
+        institution: '',
+        city: '',
+        grade: '',
+        description: '',
+    });
 
+    // Function to handle changes in the new education form inputs
     const handleEducationChange = (e) => {
         const { name, value } = e.target;
         setNewEducation({
@@ -24,6 +48,7 @@ export default function EducationSection({ educationData, setEducationData }) {
         });
     };
 
+    // Function to add new education entry
     const addEducation = () => {
         setEducationData([...educationData, newEducation]);
         setNewEducation({
@@ -37,226 +62,338 @@ export default function EducationSection({ educationData, setEducationData }) {
         });
     };
 
-    const handleEditEducation = (index, updatedEducation) => {
-        const updatedEducationData = educationData.map((edu, i) =>
-            i === index ? updatedEducation : edu
-        );
-        setEducationData(updatedEducationData);
+    // Function to initiate editing of an education entry
+    const handleEditEducation = (index) => {
+        setEditingIndex(index);
+        setEditedEducation({ ...educationData[index] });
     };
 
+    // Function to handle changes in the edited education fields
+    const handleEditedEducationChange = (e) => {
+        const { name, value } = e.target;
+        setEditedEducation({
+            ...editedEducation,
+            [name]: value,
+        });
+    };
+
+    // Function to save the edited education entry
+    const handleSaveEditedEducation = () => {
+        const updatedEducationData = [...educationData];
+        updatedEducationData[editingIndex] = editedEducation;
+        setEducationData(updatedEducationData);
+        setEditingIndex(null);
+        setEditedEducation({
+            start_year: '',
+            end_year: '',
+            degree: '',
+            institution: '',
+            city: '',
+            grade: '',
+            description: '',
+        });
+    };
+
+    // Function to cancel editing
+    const handleCancelEditEducation = () => {
+        setEditingIndex(null);
+        setEditedEducation({
+            start_year: '',
+            end_year: '',
+            degree: '',
+            institution: '',
+            city: '',
+            grade: '',
+            description: '',
+        });
+    };
+
+    // Function to move education entry up
     const moveEducationUp = (index) => {
         if (index === 0) return;
         const updatedEducation = [...educationData];
-        [updatedEducation[index - 1], updatedEducation[index]] = [updatedEducation[index], updatedEducation[index - 1]];
+        [updatedEducation[index - 1], updatedEducation[index]] = [
+            updatedEducation[index],
+            updatedEducation[index - 1],
+        ];
         setEducationData(updatedEducation);
     };
 
+    // Function to move education entry down
     const moveEducationDown = (index) => {
         if (index === educationData.length - 1) return;
         const updatedEducation = [...educationData];
-        [updatedEducation[index + 1], updatedEducation[index]] = [updatedEducation[index], updatedEducation[index + 1]];
+        [updatedEducation[index + 1], updatedEducation[index]] = [
+            updatedEducation[index],
+            updatedEducation[index + 1],
+        ];
         setEducationData(updatedEducation);
     };
 
-    const toggleFormVisibility = () => {
-        setIsFormVisible(!isFormVisible);
+    // Function to delete education entry
+    const deleteEducation = (index) => {
+        const updatedEducation = [...educationData];
+        updatedEducation.splice(index, 1);
+        setEducationData(updatedEducation);
     };
 
     return (
-        <Box sx={{ mb: 4 }}>
-            <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+        <Box>
+            <Typography variant="h5" component="h2" gutterBottom>
                 Education
             </Typography>
 
-            {educationData.map((edu, index) => (
-                <Box key={index} mb={2} sx={{ border: '1px solid #ccc', p: 2, borderRadius: 2 }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Start Year"
-                                name="start_year"
-                                value={edu.start_year}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, start_year: e.target.value })
-                                }
-                                fullWidth
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="End Year"
-                                name="end_year"
-                                value={edu.end_year}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, end_year: e.target.value })
-                                }
-                                fullWidth
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Degree"
-                                name="degree"
-                                value={edu.degree}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, degree: e.target.value })
-                                }
-                                fullWidth
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Institution"
-                                name="institution"
-                                value={edu.institution}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, institution: e.target.value })
-                                }
-                                fullWidth
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="City"
-                                name="city"
-                                value={edu.city}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, city: e.target.value })
-                                }
-                                fullWidth
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Grade"
-                                name="grade"
-                                value={edu.grade}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, grade: e.target.value })
-                                }
-                                fullWidth
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Description"
-                                name="description"
-                                value={edu.description}
-                                onChange={(e) =>
-                                    handleEditEducation(index, { ...edu, description: e.target.value })
-                                }
-                                fullWidth
-                                multiline
-                                rows={3}
-                                sx={{ mb: 2 }}
-                            />
-                        </Grid>
-
-                        <Grid item xs={12} display="flex" justifyContent="space-between">
-                            <Button
-                                variant="contained"
-                                onClick={() => moveEducationUp(index)}
-                                disabled={index === 0}
-                                sx={{ mr: 1 }}
-                            >
-                                Move Up
-                            </Button>
-                            <Button
-                                variant="contained"
-                                onClick={() => moveEducationDown(index)}
-                                disabled={index === educationData.length - 1}
-                            >
-                                Move Down
-                            </Button>
-                        </Grid>
+            {/* Form for adding new education */}
+            <Box component="form" sx={{ mb: 4 }}>
+                <Grid container spacing={2}>
+                    {/* Degree */}
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="Degree"
+                            name="degree"
+                            value={newEducation.degree}
+                            onChange={handleEducationChange}
+                            required
+                        />
                     </Grid>
-                </Box>
-            ))}
+                    {/* Institution */}
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="Institution"
+                            name="institution"
+                            value={newEducation.institution}
+                            onChange={handleEducationChange}
+                            required
+                        />
+                    </Grid>
+                    {/* City */}
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="City"
+                            name="city"
+                            value={newEducation.city}
+                            onChange={handleEducationChange}
+                            required
+                        />
+                    </Grid>
+                    {/* Start Year */}
+                    <Grid item xs={6} md={3}>
+                        <TextField
+                            fullWidth
+                            label="Start Year"
+                            name="start_year"
+                            value={newEducation.start_year}
+                            onChange={handleEducationChange}
+                            required
+                        />
+                    </Grid>
+                    {/* End Year */}
+                    <Grid item xs={6} md={3}>
+                        <TextField
+                            fullWidth
+                            label="End Year"
+                            name="end_year"
+                            value={newEducation.end_year}
+                            onChange={handleEducationChange}
+                            required
+                        />
+                    </Grid>
+                    {/* Grade */}
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="Grade"
+                            name="grade"
+                            value={newEducation.grade}
+                            onChange={handleEducationChange}
+                        />
+                    </Grid>
+                    {/* Description */}
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="Description"
+                            name="description"
+                            value={newEducation.description}
+                            onChange={handleEducationChange}
+                            multiline
+                            rows={3}
+                        />
+                    </Grid>
+                </Grid>
 
-            <Button
-                variant="outlined"
-                onClick={toggleFormVisibility}
-                startIcon={isFormVisible ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                sx={{ mt: 2 }}
-            >
-                {isFormVisible ? 'Hide Add Education Form' : 'Show Add Education Form'}
-            </Button>
+                {/* Add Education Button */}
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={addEducation}
+                    sx={{ mt: 2 }}
+                >
+                    Add Education
+                </Button>
+            </Box>
 
-            {isFormVisible && (
-                <Box>
-                    <TextField
-                        label="Start Year"
-                        name="start_year"
-                        value={newEducation.start_year}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="End Year"
-                        name="end_year"
-                        value={newEducation.end_year}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Degree"
-                        name="degree"
-                        value={newEducation.degree}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Institution"
-                        name="institution"
-                        value={newEducation.institution}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="City"
-                        name="city"
-                        value={newEducation.city}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Grade"
-                        name="grade"
-                        value={newEducation.grade}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        sx={{ mb: 2 }}
-                    />
-                    <TextField
-                        label="Description"
-                        name="description"
-                        value={newEducation.description}
-                        onChange={handleEducationChange}
-                        fullWidth
-                        multiline
-                        rows={3}
-                        sx={{ mb: 2 }}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={addEducation}
-                    >
-                        Add Education
-                    </Button>
-                </Box>
-            )}
+            {/* Display the list of education entries */}
+            <Grid container spacing={3}>
+                {educationData.map((edu, index) => (
+                    <Grid item xs={12} md={6} key={index}>
+                        <Card sx={{ height: '100%' }}>
+                            <CardContent
+                                sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}
+                            >
+                                <Grid
+                                    container
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                >
+                                    <Grid item xs={12} md={8}>
+                                        {editingIndex === index ? (
+                                            <>
+                                                {/* Editable Fields */}
+                                                {/* Degree */}
+                                                <TextField
+                                                    fullWidth
+                                                    label="Degree"
+                                                    name="degree"
+                                                    value={editedEducation.degree}
+                                                    onChange={handleEditedEducationChange}
+                                                    required
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                {/* Institution */}
+                                                <TextField
+                                                    fullWidth
+                                                    label="Institution"
+                                                    name="institution"
+                                                    value={editedEducation.institution}
+                                                    onChange={handleEditedEducationChange}
+                                                    required
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                {/* City */}
+                                                <TextField
+                                                    fullWidth
+                                                    label="City"
+                                                    name="city"
+                                                    value={editedEducation.city}
+                                                    onChange={handleEditedEducationChange}
+                                                    required
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                {/* Start Year and End Year */}
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            label="Start Year"
+                                                            name="start_year"
+                                                            value={editedEducation.start_year}
+                                                            onChange={handleEditedEducationChange}
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            label="End Year"
+                                                            name="end_year"
+                                                            value={editedEducation.end_year}
+                                                            onChange={handleEditedEducationChange}
+                                                            required
+                                                        />
+                                                    </Grid>
+                                                </Grid>
+                                                {/* Grade */}
+                                                <TextField
+                                                    fullWidth
+                                                    label="Grade"
+                                                    name="grade"
+                                                    value={editedEducation.grade}
+                                                    onChange={handleEditedEducationChange}
+                                                    sx={{ mt: 2 }}
+                                                />
+                                                {/* Description */}
+                                                <TextField
+                                                    fullWidth
+                                                    label="Description"
+                                                    name="description"
+                                                    value={editedEducation.description}
+                                                    onChange={handleEditedEducationChange}
+                                                    multiline
+                                                    rows={3}
+                                                    sx={{ mt: 2 }}
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* Display Fields */}
+                                                <Typography variant="h6">{edu.degree}</Typography>
+                                                <Typography variant="body1">
+                                                    {edu.institution}
+                                                    {edu.city && `, ${edu.city}`}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    {edu.start_year} - {edu.end_year}
+                                                </Typography>
+                                                {edu.grade && (
+                                                    <Typography variant="body2">
+                                                        Grade: {edu.grade}
+                                                    </Typography>
+                                                )}
+                                                {edu.description && (
+                                                    <Typography variant="body2" gutterBottom>
+                                                        {edu.description}
+                                                    </Typography>
+                                                )}
+                                            </>
+                                        )}
+                                    </Grid>
+                                    <Grid item>
+                                        {editingIndex === index ? (
+                                            <>
+                                                {/* Save and Cancel Buttons */}
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    onClick={handleSaveEditedEducation}
+                                                    sx={{ mr: 1 }}
+                                                >
+                                                    Save
+                                                </Button>
+                                                <Button
+                                                    variant="outlined"
+                                                    onClick={handleCancelEditEducation}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* Action Buttons */}
+                                                <IconButton onClick={() => moveEducationUp(index)}>
+                                                    <ArrowUpwardIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => moveEducationDown(index)}>
+                                                    <ArrowDownwardIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => deleteEducation(index)}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                                <IconButton onClick={() => handleEditEducation(index)}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </>
+                                        )}
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
         </Box>
     );
 }

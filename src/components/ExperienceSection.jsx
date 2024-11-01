@@ -263,6 +263,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             name="city"
                             value={newExperience.city}
                             onChange={handleInputChange}
+                            required
                         />
                     </Grid>
                     <Grid item xs={6} md={3}>
@@ -272,6 +273,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             name="start_year"
                             value={newExperience.start_year}
                             onChange={handleInputChange}
+                            required
                         />
                     </Grid>
                     <Grid item xs={6} md={3}>
@@ -281,6 +283,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             name="end_year"
                             value={newExperience.end_year}
                             onChange={handleInputChange}
+                            required
                         />
                     </Grid>
                     <Grid item xs={12}>
