@@ -7,7 +7,7 @@ import RoleManager from './components/RoleManager';
 import ResumeSaver from './components/ResumeSaver';
 import ResumeLoader from './components/ResumeLoader';
 import ApplicationsManager from './components/ApplicationsManager';
-import { downloadJson } from './utils/downloadJson'; // Import the download function
+import { downloadJson } from './utils/downloadJson';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState(0);
@@ -42,7 +42,15 @@ export default function App() {
   };
 
   return (
-    <Box sx={{ width: '100%', p: 3, maxWidth: '100%', boxSizing: 'border-box', margin: '0 auto' }}>
+    <Box
+      sx={{
+        width: '100%',
+        p: 3,
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        margin: '0 auto',
+      }}
+    >
       {/* Tabs Navigation */}
       <Tabs value={currentTab} onChange={handleTabChange}>
         <Tab label="Roles" />
@@ -76,9 +84,7 @@ export default function App() {
               <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
                 <EducationSection
                   educationData={formData.education}
-                  setEducationData={(data) =>
-                    setFormData({ ...formData, education: data })
-                  }
+                  setEducationData={(data) => setFormData({ ...formData, education: data })}
                 />
               </Grid>
             </Grid>
@@ -90,7 +96,6 @@ export default function App() {
               />
             </Box>
 
-
             {/* JSON Summary */}
             <Box sx={{ mt: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
               <Typography variant="h6">Current Form Data (JSON):</Typography>
@@ -98,8 +103,6 @@ export default function App() {
             </Box>
           </Box>
         )}
-
-
 
         {/* Save/Load Tab */}
         {currentTab === 2 && (

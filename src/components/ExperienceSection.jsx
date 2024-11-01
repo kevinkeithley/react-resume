@@ -10,11 +10,14 @@ import {
     TextField,
     List,
     ListItem,
-    ListItemText
+    ListItemText,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import {
+    Delete as DeleteIcon,
+    ArrowUpward as ArrowUpwardIcon,
+    ArrowDownward as ArrowDownwardIcon,
+    Edit as EditIcon,
+} from '@mui/icons-material';
 
 export default function ExperienceSection({ experienceData, setExperienceData }) {
     const [newExperience, setNewExperience] = useState({
@@ -24,10 +27,14 @@ export default function ExperienceSection({ experienceData, setExperienceData })
         employer: '',
         city: '',
         description: '',
-        achievements: [{ text: '', subAchievements: [] }]
+        achievements: [{ text: '', subAchievements: [] }],
     });
 
-    // Function to handle changes in the form inputs
+    // State variables for editing experience entries
+    const [editingExperienceIndex, setEditingExperienceIndex] = useState(null);
+    const [editedExperience, setEditedExperience] = useState(null);
+
+    // Function to handle changes in the form inputs for new experience
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewExperience({
@@ -36,35 +43,16 @@ export default function ExperienceSection({ experienceData, setExperienceData })
         });
     };
 
-    // Add Achievement
-    const addAchievement = (experienceIndex) => {
-        const updatedExperiences = [...experienceData];
-        const updatedAchievements = [
-            ...updatedExperiences[experienceIndex].achievements,
-            { text: '', subAchievements: [] }
-        ];
-        updatedExperiences[experienceIndex] = {
-            ...updatedExperiences[experienceIndex],
-            achievements: updatedAchievements,
-        };
-        setExperienceData(updatedExperiences);
+    // Function to handle changes in the edited experience fields
+    const handleEditedInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditedExperience({
+            ...editedExperience,
+            [name]: value,
+        });
     };
 
-    // Add sub-achievement
-    const addSubAchievement = (experienceIndex, achievementIndex) => {
-        const updatedExperiences = [...experienceData];
-        const updatedSubAchievements = [
-            ...updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements,
-            { text: '' }
-        ];
-        updatedExperiences[experienceIndex].achievements[achievementIndex] = {
-            ...updatedExperiences[experienceIndex].achievements[achievementIndex],
-            subAchievements: updatedSubAchievements,
-        };
-        setExperienceData(updatedExperiences);
-    };
-
-    // Update experience
+    // Function to add a new experience
     const addExperience = () => {
         setExperienceData([...experienceData, newExperience]);
         setNewExperience({
@@ -74,21 +62,72 @@ export default function ExperienceSection({ experienceData, setExperienceData })
             employer: '',
             city: '',
             description: '',
-            achievements: [{ text: '', subAchievements: [] }]
+            achievements: [{ text: '', subAchievements: [] }],
         });
     };
 
-    // Update Achievement text
+    // Function to initiate editing of an experience entry
+    const handleEditExperience = (experienceIndex) => {
+        setEditingExperienceIndex(experienceIndex);
+        setEditedExperience({ ...experienceData[experienceIndex] });
+    };
+
+    // Function to save the edited experience entry
+    const handleSaveEditedExperience = () => {
+        const updatedExperiences = [...experienceData];
+        updatedExperiences[editingExperienceIndex] = editedExperience;
+        setExperienceData(updatedExperiences);
+        setEditingExperienceIndex(null);
+        setEditedExperience(null);
+    };
+
+    // Function to cancel editing
+    const handleCancelEditExperience = () => {
+        setEditingExperienceIndex(null);
+        setEditedExperience(null);
+    };
+
+    // Add Achievement
+    const addAchievement = (experienceIndex) => {
+        const updatedExperiences = [...experienceData];
+        const updatedAchievements = [
+            ...updatedExperiences[experienceIndex].achievements,
+            { text: '', subAchievements: [] },
+        ];
+        updatedExperiences[experienceIndex] = {
+            ...updatedExperiences[experienceIndex],
+            achievements: updatedAchievements,
+        };
+        setExperienceData(updatedExperiences);
+    };
+
+    // Add Sub-Achievement
+    const addSubAchievement = (experienceIndex, achievementIndex) => {
+        const updatedExperiences = [...experienceData];
+        const updatedSubAchievements = [
+            ...updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements,
+            { text: '' },
+        ];
+        updatedExperiences[experienceIndex].achievements[achievementIndex] = {
+            ...updatedExperiences[experienceIndex].achievements[achievementIndex],
+            subAchievements: updatedSubAchievements,
+        };
+        setExperienceData(updatedExperiences);
+    };
+
+    // Update Achievement Text
     const handleAchievementChange = (experienceIndex, achievementIndex, value) => {
         const updatedExperiences = [...experienceData];
         updatedExperiences[experienceIndex].achievements[achievementIndex].text = value;
         setExperienceData(updatedExperiences);
     };
 
-    // Update Sub-Achievement text
+    // Update Sub-Achievement Text
     const handleSubAchievementChange = (experienceIndex, achievementIndex, subIndex, value) => {
         const updatedExperiences = [...experienceData];
-        updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements[subIndex].text = value;
+        updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements[
+            subIndex
+        ].text = value;
         setExperienceData(updatedExperiences);
     };
 
@@ -102,7 +141,10 @@ export default function ExperienceSection({ experienceData, setExperienceData })
     // Delete Sub-Achievement
     const deleteSubAchievement = (experienceIndex, achievementIndex, subIndex) => {
         const updatedExperiences = [...experienceData];
-        updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements.splice(subIndex, 1);
+        updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements.splice(
+            subIndex,
+            1
+        );
         setExperienceData(updatedExperiences);
     };
 
@@ -111,7 +153,10 @@ export default function ExperienceSection({ experienceData, setExperienceData })
         if (achievementIndex === 0) return;
         const updatedExperiences = [...experienceData];
         const achievements = updatedExperiences[experienceIndex].achievements;
-        [achievements[achievementIndex - 1], achievements[achievementIndex]] = [achievements[achievementIndex], achievements[achievementIndex - 1]];
+        [achievements[achievementIndex - 1], achievements[achievementIndex]] = [
+            achievements[achievementIndex],
+            achievements[achievementIndex - 1],
+        ];
         setExperienceData(updatedExperiences);
     };
 
@@ -120,7 +165,10 @@ export default function ExperienceSection({ experienceData, setExperienceData })
         const updatedExperiences = [...experienceData];
         const achievements = updatedExperiences[experienceIndex].achievements;
         if (achievementIndex === achievements.length - 1) return;
-        [achievements[achievementIndex + 1], achievements[achievementIndex]] = [achievements[achievementIndex], achievements[achievementIndex + 1]];
+        [achievements[achievementIndex + 1], achievements[achievementIndex]] = [
+            achievements[achievementIndex],
+            achievements[achievementIndex + 1],
+        ];
         setExperienceData(updatedExperiences);
     };
 
@@ -128,17 +176,25 @@ export default function ExperienceSection({ experienceData, setExperienceData })
     const moveSubAchievementUp = (experienceIndex, achievementIndex, subIndex) => {
         if (subIndex === 0) return;
         const updatedExperiences = [...experienceData];
-        const subAchievements = updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements;
-        [subAchievements[subIndex - 1], subAchievements[subIndex]] = [subAchievements[subIndex], subAchievements[subIndex - 1]];
+        const subAchievements =
+            updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements;
+        [subAchievements[subIndex - 1], subAchievements[subIndex]] = [
+            subAchievements[subIndex],
+            subAchievements[subIndex - 1],
+        ];
         setExperienceData(updatedExperiences);
     };
 
     // Move Sub-Achievement Down
     const moveSubAchievementDown = (experienceIndex, achievementIndex, subIndex) => {
         const updatedExperiences = [...experienceData];
-        const subAchievements = updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements;
+        const subAchievements =
+            updatedExperiences[experienceIndex].achievements[achievementIndex].subAchievements;
         if (subIndex === subAchievements.length - 1) return;
-        [subAchievements[subIndex + 1], subAchievements[subIndex]] = [subAchievements[subIndex], subAchievements[subIndex + 1]];
+        [subAchievements[subIndex + 1], subAchievements[subIndex]] = [
+            subAchievements[subIndex],
+            subAchievements[subIndex + 1],
+        ];
         setExperienceData(updatedExperiences);
     };
 
@@ -153,7 +209,10 @@ export default function ExperienceSection({ experienceData, setExperienceData })
     const moveExperienceUp = (experienceIndex) => {
         if (experienceIndex === 0) return;
         const updatedExperiences = [...experienceData];
-        [updatedExperiences[experienceIndex - 1], updatedExperiences[experienceIndex]] = [updatedExperiences[experienceIndex], updatedExperiences[experienceIndex - 1]];
+        [updatedExperiences[experienceIndex - 1], updatedExperiences[experienceIndex]] = [
+            updatedExperiences[experienceIndex],
+            updatedExperiences[experienceIndex - 1],
+        ];
         setExperienceData(updatedExperiences);
     };
 
@@ -161,7 +220,10 @@ export default function ExperienceSection({ experienceData, setExperienceData })
     const moveExperienceDown = (experienceIndex) => {
         if (experienceIndex === experienceData.length - 1) return;
         const updatedExperiences = [...experienceData];
-        [updatedExperiences[experienceIndex + 1], updatedExperiences[experienceIndex]] = [updatedExperiences[experienceIndex], updatedExperiences[experienceIndex + 1]];
+        [updatedExperiences[experienceIndex + 1], updatedExperiences[experienceIndex]] = [
+            updatedExperiences[experienceIndex],
+            updatedExperiences[experienceIndex + 1],
+        ];
         setExperienceData(updatedExperiences);
     };
 
@@ -234,12 +296,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                 </Grid>
 
                 {/* Add Experience Button */}
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={addExperience}
-                    sx={{ mt: 2 }}
-                >
+                <Button variant="contained" color="primary" onClick={addExperience} sx={{ mt: 2 }}>
                     Add Experience
                 </Button>
             </Box>
@@ -251,14 +308,81 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                         <Card sx={{ height: '100%' }}>
                             <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                 <Grid container justifyContent="space-between" alignItems="center">
-                                    <Grid item>
-                                        <Typography variant="h6">{job.job_title}</Typography>
-                                        <Typography variant="body1">
-                                            {job.employer}, {job.city}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            {job.start_year} - {job.end_year}
-                                        </Typography>
+                                    <Grid item xs={12} md={8}>
+                                        {/* Conditional Rendering for Editing */}
+                                        {editingExperienceIndex === experienceIndex ? (
+                                            <>
+                                                {/* Editable Fields */}
+                                                <TextField
+                                                    fullWidth
+                                                    label="Job Title"
+                                                    name="job_title"
+                                                    value={editedExperience.job_title}
+                                                    onChange={handleEditedInputChange}
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                <TextField
+                                                    fullWidth
+                                                    label="Employer"
+                                                    name="employer"
+                                                    value={editedExperience.employer}
+                                                    onChange={handleEditedInputChange}
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                <TextField
+                                                    fullWidth
+                                                    label="City"
+                                                    name="city"
+                                                    value={editedExperience.city}
+                                                    onChange={handleEditedInputChange}
+                                                    sx={{ mb: 1 }}
+                                                />
+                                                <Grid container spacing={2}>
+                                                    <Grid item xs={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            label="Start Year"
+                                                            name="start_year"
+                                                            value={editedExperience.start_year}
+                                                            onChange={handleEditedInputChange}
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={6}>
+                                                        <TextField
+                                                            fullWidth
+                                                            label="End Year"
+                                                            name="end_year"
+                                                            value={editedExperience.end_year}
+                                                            onChange={handleEditedInputChange}
+                                                        />
+                                                    </Grid>
+                                                </Grid>
+                                                <TextField
+                                                    fullWidth
+                                                    label="Description"
+                                                    name="description"
+                                                    multiline
+                                                    value={editedExperience.description}
+                                                    onChange={handleEditedInputChange}
+                                                    sx={{ mt: 2 }}
+                                                />
+                                            </>
+                                        ) : (
+                                            <>
+                                                {/* Display Fields */}
+                                                <Typography variant="h6">{job.job_title}</Typography>
+                                                <Typography variant="body1">
+                                                    {job.employer}
+                                                    {job.city && `, ${job.city}`}
+                                                </Typography>
+                                                <Typography variant="body2">
+                                                    {job.start_year} - {job.end_year}
+                                                </Typography>
+                                                <Typography variant="body2" gutterBottom>
+                                                    {job.description}
+                                                </Typography>
+                                            </>
+                                        )}
                                     </Grid>
                                     <Grid item>
                                         <IconButton onClick={() => moveExperienceUp(experienceIndex)}>
@@ -270,12 +394,29 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                         <IconButton onClick={() => deleteExperience(experienceIndex)}>
                                             <DeleteIcon />
                                         </IconButton>
+                                        {/* Edit Button */}
+                                        <IconButton onClick={() => handleEditExperience(experienceIndex)}>
+                                            <EditIcon />
+                                        </IconButton>
                                     </Grid>
                                 </Grid>
 
-                                <Typography variant="body2" gutterBottom>
-                                    {job.description}
-                                </Typography>
+                                {/* Save and Cancel Buttons */}
+                                {editingExperienceIndex === experienceIndex && (
+                                    <Box sx={{ mt: 2 }}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={handleSaveEditedExperience}
+                                            sx={{ mr: 1 }}
+                                        >
+                                            Save
+                                        </Button>
+                                        <Button variant="outlined" onClick={handleCancelEditExperience}>
+                                            Cancel
+                                        </Button>
+                                    </Box>
+                                )}
 
                                 {/* Achievements */}
                                 <Typography variant="body2" sx={{ mt: 2 }}>
@@ -302,30 +443,24 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                     </Grid>
                                                     <Grid item>
                                                         <IconButton
-                                                            onClick={() =>
-                                                                moveAchievementUp(experienceIndex, achievementIndex)
-                                                            }
+                                                            onClick={() => moveAchievementUp(experienceIndex, achievementIndex)}
                                                         >
                                                             <ArrowUpwardIcon />
                                                         </IconButton>
                                                         <IconButton
-                                                            onClick={() =>
-                                                                moveAchievementDown(experienceIndex, achievementIndex)
-                                                            }
+                                                            onClick={() => moveAchievementDown(experienceIndex, achievementIndex)}
                                                         >
                                                             <ArrowDownwardIcon />
                                                         </IconButton>
                                                         <IconButton
-                                                            onClick={() =>
-                                                                deleteAchievement(experienceIndex, achievementIndex)
-                                                            }
+                                                            onClick={() => deleteAchievement(experienceIndex, achievementIndex)}
                                                         >
                                                             <DeleteIcon />
                                                         </IconButton>
                                                     </Grid>
                                                 </Grid>
 
-                                                {/* Sub-achievements */}
+                                                {/* Sub-Achievements */}
                                                 <List sx={{ pl: 4 }}>
                                                     {achievement.subAchievements.map((sub, subIndex) => (
                                                         <ListItem key={subIndex} alignItems="flex-start">
@@ -385,9 +520,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                     ))}
                                                     <ListItem>
                                                         <Button
-                                                            onClick={() =>
-                                                                addSubAchievement(experienceIndex, achievementIndex)
-                                                            }
+                                                            onClick={() => addSubAchievement(experienceIndex, achievementIndex)}
                                                         >
                                                             Add Sub-Achievement
                                                         </Button>
