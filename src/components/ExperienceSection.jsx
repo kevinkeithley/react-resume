@@ -10,7 +10,6 @@ import {
     TextField,
     List,
     ListItem,
-    ListItemText,
 } from '@mui/material';
 import {
     Delete as DeleteIcon,
@@ -236,7 +235,8 @@ export default function ExperienceSection({ experienceData, setExperienceData })
             {/* Form for adding new experience */}
             <Box component="form" sx={{ mb: 4 }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
+                    {/* Adjusted Grid items to include 'sm' props */}
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             label="Job Title"
@@ -246,7 +246,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             required
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             label="Employer"
@@ -256,7 +256,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             required
                         />
                     </Grid>
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             fullWidth
                             label="City"
@@ -266,7 +266,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             required
                         />
                     </Grid>
-                    <Grid item xs={6} md={3}>
+                    <Grid item xs={6} sm={3}>
                         <TextField
                             fullWidth
                             label="Start Year"
@@ -276,7 +276,7 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                             required
                         />
                     </Grid>
-                    <Grid item xs={6} md={3}>
+                    <Grid item xs={6} sm={3}>
                         <TextField
                             fullWidth
                             label="End Year"
@@ -307,11 +307,11 @@ export default function ExperienceSection({ experienceData, setExperienceData })
             {/* Display the list of experiences */}
             <Grid container spacing={3}>
                 {experienceData.map((job, experienceIndex) => (
-                    <Grid item xs={12} md={6} key={experienceIndex}>
+                    <Grid item xs={12} key={experienceIndex}>
                         <Card sx={{ height: '100%' }}>
                             <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                                <Grid container justifyContent="space-between" alignItems="center">
-                                    <Grid item xs={12} md={8}>
+                                <Grid container spacing={1} alignItems="center">
+                                    <Grid item xs={12} sm={9}>
                                         {/* Conditional Rendering for Editing */}
                                         {editingExperienceIndex === experienceIndex ? (
                                             <>
@@ -381,13 +381,20 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                 <Typography variant="body2">
                                                     {job.start_year} - {job.end_year}
                                                 </Typography>
-                                                <Typography variant="body2" gutterBottom>
-                                                    {job.description}
-                                                </Typography>
+                                                {job.description && (
+                                                    <Typography variant="body2" gutterBottom>
+                                                        {job.description}
+                                                    </Typography>
+                                                )}
                                             </>
                                         )}
                                     </Grid>
-                                    <Grid item>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sm={3}
+                                        sx={{ textAlign: { xs: 'left', sm: 'right' }, mt: { xs: 1, sm: 0 } }}
+                                    >
                                         <IconButton onClick={() => moveExperienceUp(experienceIndex)}>
                                             <ArrowUpwardIcon />
                                         </IconButton>
@@ -427,12 +434,13 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                 </Typography>
                                 <List>
                                     {job.achievements.map((achievement, achievementIndex) => (
-                                        <ListItem key={achievementIndex} alignItems="flex-start">
+                                        <ListItem key={achievementIndex} alignItems="flex-start" sx={{ paddingLeft: 0 }}>
                                             <Box sx={{ width: '100%' }}>
                                                 <Grid container spacing={1} alignItems="center">
-                                                    <Grid item xs>
+                                                    <Grid item xs={12} sm={10}>
                                                         <TextField
                                                             fullWidth
+                                                            multiline
                                                             value={achievement.text}
                                                             onChange={(e) =>
                                                                 handleAchievementChange(
@@ -444,19 +452,30 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                             placeholder="Achievement Text"
                                                         />
                                                     </Grid>
-                                                    <Grid item>
+                                                    <Grid
+                                                        item
+                                                        xs={12}
+                                                        sm={2}
+                                                        sx={{ textAlign: { xs: 'left', sm: 'right' }, mt: { xs: 1, sm: 0 } }}
+                                                    >
                                                         <IconButton
-                                                            onClick={() => moveAchievementUp(experienceIndex, achievementIndex)}
+                                                            onClick={() =>
+                                                                moveAchievementUp(experienceIndex, achievementIndex)
+                                                            }
                                                         >
                                                             <ArrowUpwardIcon />
                                                         </IconButton>
                                                         <IconButton
-                                                            onClick={() => moveAchievementDown(experienceIndex, achievementIndex)}
+                                                            onClick={() =>
+                                                                moveAchievementDown(experienceIndex, achievementIndex)
+                                                            }
                                                         >
                                                             <ArrowDownwardIcon />
                                                         </IconButton>
                                                         <IconButton
-                                                            onClick={() => deleteAchievement(experienceIndex, achievementIndex)}
+                                                            onClick={() =>
+                                                                deleteAchievement(experienceIndex, achievementIndex)
+                                                            }
                                                         >
                                                             <DeleteIcon />
                                                         </IconButton>
@@ -464,13 +483,18 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                 </Grid>
 
                                                 {/* Sub-Achievements */}
-                                                <List sx={{ pl: 4 }}>
+                                                <List sx={{ pl: { xs: 2, sm: 4 } }}>
                                                     {achievement.subAchievements.map((sub, subIndex) => (
-                                                        <ListItem key={subIndex} alignItems="flex-start">
+                                                        <ListItem
+                                                            key={subIndex}
+                                                            alignItems="flex-start"
+                                                            sx={{ paddingLeft: 0 }}
+                                                        >
                                                             <Grid container spacing={1} alignItems="center">
-                                                                <Grid item xs>
+                                                                <Grid item xs={12} sm={10}>
                                                                     <TextField
                                                                         fullWidth
+                                                                        multiline
                                                                         value={sub.text}
                                                                         onChange={(e) =>
                                                                             handleSubAchievementChange(
@@ -483,7 +507,15 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                                         placeholder="Sub-Achievement Text"
                                                                     />
                                                                 </Grid>
-                                                                <Grid item>
+                                                                <Grid
+                                                                    item
+                                                                    xs={12}
+                                                                    sm={2}
+                                                                    sx={{
+                                                                        textAlign: { xs: 'left', sm: 'right' },
+                                                                        mt: { xs: 1, sm: 0 },
+                                                                    }}
+                                                                >
                                                                     <IconButton
                                                                         onClick={() =>
                                                                             moveSubAchievementUp(
@@ -521,9 +553,12 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                                             </Grid>
                                                         </ListItem>
                                                     ))}
-                                                    <ListItem>
+                                                    <ListItem sx={{ paddingLeft: 0 }}>
                                                         <Button
-                                                            onClick={() => addSubAchievement(experienceIndex, achievementIndex)}
+                                                            onClick={() =>
+                                                                addSubAchievement(experienceIndex, achievementIndex)
+                                                            }
+                                                            sx={{ ml: { xs: 0, sm: 2 } }}
                                                         >
                                                             Add Sub-Achievement
                                                         </Button>
@@ -532,10 +567,8 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                             </Box>
                                         </ListItem>
                                     ))}
-                                    <ListItem>
-                                        <Button onClick={() => addAchievement(experienceIndex)}>
-                                            Add Achievement
-                                        </Button>
+                                    <ListItem sx={{ paddingLeft: 0 }}>
+                                        <Button onClick={() => addAchievement(experienceIndex)}>Add Achievement</Button>
                                     </ListItem>
                                 </List>
                             </CardContent>

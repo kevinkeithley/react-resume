@@ -76,15 +76,23 @@ export default function App() {
               <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
                 <PersonalInfoForm
                   personalInfo={formData.personal_information}
-                  setPersonalInfo={(data) =>
-                    setFormData({ ...formData, personal_information: data })
+                  ssetPersonalInfo={(data) =>
+                    setFormData((prevFormData) => ({
+                      ...prevFormData,
+                      personal_information: data,
+                    }))
                   }
                 />
               </Grid>
               <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
                 <EducationSection
                   educationData={formData.education}
-                  setEducationData={(data) => setFormData({ ...formData, education: data })}
+                  setEducationData={(data) =>
+                    setFormData((prevFormData) => ({
+                      ...prevFormData,
+                      education: data,
+                    }))
+                  }
                 />
               </Grid>
             </Grid>
@@ -92,7 +100,12 @@ export default function App() {
             <Box sx={{ mt: 4 }}>
               <ExperienceSection
                 experienceData={formData.experience}
-                setExperienceData={(data) => setFormData({ ...formData, experience: data })}
+                setExperienceData={(data) =>
+                  setFormData((prevFormData) => ({
+                    ...prevFormData,
+                    experience: data,
+                  }))
+                }
               />
             </Box>
 
