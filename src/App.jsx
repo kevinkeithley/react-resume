@@ -76,7 +76,7 @@ export default function App() {
               <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
                 <PersonalInfoForm
                   personalInfo={formData.personal_information}
-                  ssetPersonalInfo={(data) =>
+                  setPersonalInfo={(data) =>
                     setFormData((prevFormData) => ({
                       ...prevFormData,
                       personal_information: data,

@@ -1,0 +1,112 @@
+{
+  "personal_information": {
+    "first_name": "Kevin",
+    "last_name": "Keithley",
+    "title": "Analyst, Manager, Entrepreneur",
+    "address_1": "",
+    "address_2": "Reston, VA ",
+    "address_3": "",
+    "mobile": "(703) 899-1584",
+    "email": "kevkeithley@gmail.com",
+    "homepage": "",
+    "linkedin": "",
+    "github": "kevinkeithley",
+    "gitlab": ""
+  },
+  "education": [
+    {
+      "start_year": "2021",
+      "end_year": "2024",
+      "degree": "Master of Science in Data Science",
+      "institution": "Tufts University",
+      "city": "Boston, MA",
+      "grade": "3.9 GPA",
+      "description": "Completed coursework while working full time"
+    },
+    {
+      "start_year": "2006",
+      "end_year": "2010",
+      "degree": "Bachelor of Science  in Finance (Second Major: Mathematics)",
+      "institution": "University of Virginia",
+      "city": "Charlottesville, VA",
+      "grade": "3.6 GPA",
+      "description": "Two-year captain of the Varsity Cheer team"
+    }
+  ],
+  "experience": [
+    {
+      "start_year": "2010",
+      "end_year": "2014",
+      "job_title": "Research Analyst",
+      "employer": "International Monetary Fund (IMF)",
+      "city": "Washington, DC",
+      "description": "Full-time, 40 hours per week, GS-7 equivalent",
+      "achievements": [
+        {
+          "text": "Reviewed, analyzed, and evaluated economic policies and programs, aligning with the role’s requirements for analyzing financial and administrative systems",
+          "subAchievements": []
+        },
+        {
+          "text": "Created and implemented economic models to support policy decisions, showcasing skills in research, forecasting, and program evaluation",
+          "subAchievements": []
+        },
+        {
+          "text": "Prepared detailed financial reports and projections for management, including monthly and quarterly updates, akin to preparing Status of Funds reports",
+          "subAchievements": []
+        },
+        {
+          "text": "Improved data processing efficiency by 50% through automation, demonstrating a strong ability to optimize financial workflows and systems",
+          "subAchievements": []
+        },
+        {
+          "text": "Collaborated with cross-functional teams and presented findings to leadership, reflecting excellent communication and teamwork",
+          "subAchievements": []
+        }
+      ]
+    },
+    {
+      "start_year": "2016",
+      "end_year": "Present",
+      "job_title": "Catering Manager",
+      "employer": "Mookie's BBQ",
+      "city": "Great Falls, VA",
+      "description": "Part-time, 25+ hours per week",
+      "achievements": [
+        {
+          "text": "Managed operations generating over $250,000 annually, including financial tracking and resource allocation",
+          "subAchievements": []
+        },
+        {
+          "text": "Automated processes using Visual Basic and Power BI, improving efficiency and reducing operational errors—skills applicable to streamlining administrative systems",
+          "subAchievements": []
+        },
+        {
+          "text": "Reconciled accounts and generated detailed financial insights, similar to reviewing payroll and transaction reports",
+          "subAchievements": []
+        }
+      ]
+    },
+    {
+      "start_year": "2016",
+      "end_year": "Present",
+      "job_title": "Small Business Owner",
+      "employer": "Body Transcendence LLC",
+      "city": "McLean, VA",
+      "description": "Part-time, 30+ hours per week",
+      "achievements": [
+        {
+          "text": "Managed all financial operations, including revenue forecasting, expense tracking, and budgeting",
+          "subAchievements": []
+        },
+        {
+          "text": "Designed data-driven strategies to optimize business processes, resulting in increased efficiency and higher customer retention",
+          "subAchievements": []
+        },
+        {
+          "text": "Developed year-end financial projections and reports using historical and current data, closely mirroring FMMI year-end estimate preparation",
+          "subAchievements": []
+        }
+      ]
+    }
+  ]
+}

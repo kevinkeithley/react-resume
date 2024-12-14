@@ -307,7 +307,8 @@ export default function ExperienceSection({ experienceData, setExperienceData })
             {/* Display the list of experiences */}
             <Grid container spacing={3}>
                 {experienceData.map((job, experienceIndex) => (
-                    <Grid item xs={12} key={experienceIndex}>
+                    // **Add md={6} back to restore two-column layout**
+                    <Grid item xs={12} md={6} key={experienceIndex}>
                         <Card sx={{ height: '100%' }}>
                             <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                                 <Grid container spacing={1} alignItems="center">
@@ -434,7 +435,11 @@ export default function ExperienceSection({ experienceData, setExperienceData })
                                 </Typography>
                                 <List>
                                     {job.achievements.map((achievement, achievementIndex) => (
-                                        <ListItem key={achievementIndex} alignItems="flex-start" sx={{ paddingLeft: 0 }}>
+                                        <ListItem
+                                            key={achievementIndex}
+                                            alignItems="flex-start"
+                                            sx={{ paddingLeft: 0 }}
+                                        >
                                             <Box sx={{ width: '100%' }}>
                                                 <Grid container spacing={1} alignItems="center">
                                                     <Grid item xs={12} sm={10}>
