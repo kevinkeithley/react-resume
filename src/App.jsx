@@ -9,8 +9,15 @@ import ResumeLoader from './components/ResumeLoader';
 import ApplicationsManager from './components/ApplicationsManager';
 import { downloadJson } from './utils/downloadJson';
 
+// Newly created components:
+import ComputerSkillsSection from './components/ComputerSkillsSection';
+import SkillMatrixSection from './components/SkillMatrixSection';
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState(0);
+  const [roles, setRoles] = useState([]);
+  const [applications, setApplications] = useState([]);
+
   const [formData, setFormData] = useState({
     personal_information: {
       first_name: '',
@@ -28,16 +35,19 @@ export default function App() {
     },
     education: [],
     experience: [],
+    computer_skills: [],      // Added this
+    skill_matrix: {           // Added this
+      title: '',
+      description: '',
+      entries: []
+    }
   });
-  const [roles, setRoles] = useState([]); // Roles for resumes
-  const [applications, setApplications] = useState([]); // Job applications
 
   const handleTabChange = (event, newValue) => {
     setCurrentTab(newValue);
   };
 
   const handleDownload = () => {
-    // Call the downloadJson function and pass in the current form data
     downloadJson(formData);
   };
 
@@ -108,6 +118,26 @@ export default function App() {
                 }
               />
             </Box>
+
+            {/* New Sections for Computer Skills & Skill Matrix */}
+            <Grid container spacing={2} sx={{ mt: 4 }}>
+              <Grid item xs={12} md={6}>
+                <ComputerSkillsSection
+                  computerSkills={formData.computer_skills}
+                  setComputerSkills={(data) =>
+                    setFormData((prev) => ({ ...prev, computer_skills: data }))
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <SkillMatrixSection
+                  skillMatrix={formData.skill_matrix}
+                  setSkillMatrix={(data) =>
+                    setFormData((prev) => ({ ...prev, skill_matrix: data }))
+                  }
+                />
+              </Grid>
+            </Grid>
 
             {/* JSON Summary */}
             <Box sx={{ mt: 4, p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
