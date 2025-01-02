@@ -14,6 +14,7 @@ dist-ssr
 # Ignore temporary files in tmp and pdfs directories, but not the directories themselves
 tmp/*
 pdfs/*
+json-files/*
 
 # Editor directories and files
 .vscode/*
