@@ -5,8 +5,8 @@ import re
 import shutil
 
 # Setup I/Os
-in_json = "test"  # JSON file in folder json-files
-out_file = "test123"  # Name for final pdf
+in_json = "SkillMatrix"  # JSON file in folder json-files
+out_file = "SkillMatrix"  # Name for final pdf
 
 # Load JSON data
 with open(f"json-files/{in_json}.json", encoding="utf-8") as f:
@@ -62,6 +62,14 @@ latex_content = r"""
 % Experience Section
 \section{Experience}
 {experience}
+
+% Computer Skills Section
+\section{Computer skills}
+{computer_skills}
+
+% Skill Matrix Section
+\section{Skill matrix}
+{skill_matrix}
 
 \end{document}
 """
@@ -154,6 +162,57 @@ for exp in data["experience"]:
     experience_entries.append(exp_entry)
 
 latex_content = latex_content.replace("{experience}", "\n".join(experience_entries))
+
+# Add Computer Skills Section
+if "computer_skills" in data and data["computer_skills"]:
+    computer_skills_entries = []
+    skills_list = data["computer_skills"]
+    for i in range(0, len(skills_list), 2):
+        left_category = skills_list[i]
+        right_category = skills_list[i + 1] if i + 1 < len(skills_list) else None
+        left_skills = ", ".join(
+            latex_escape(skill.strip()) for skill in left_category["skills"].split(",")
+        )
+        right_skills = (
+            ", ".join(
+                latex_escape(skill.strip())
+                for skill in right_category["skills"].split(",")
+            )
+            if right_category
+            else ""
+        )
+        computer_skills_entries.append(
+            r"\cvdoubleitem{{{}}}{{{}}}{{{}}}{{{}}}".format(
+                latex_escape(left_category["category"]),
+                left_skills,
+                latex_escape(right_category["category"]) if right_category else "",
+                right_skills,
+            )
+        )
+    latex_content = latex_content.replace(
+        "{computer_skills}", "\n".join(computer_skills_entries)
+    )
+else:
+    latex_content = latex_content.replace("{computer_skills}", "")
+
+# Add Skill Matrix Section
+if "skill_matrix" in data and data["skill_matrix"]["entries"]:
+    skill_matrix_entries = []
+    for entry in data["skill_matrix"]["entries"]:
+        skill_matrix_entries.append(
+            r"\cvskillentry{{{}}}{{{}}}{{{}}}{{{}}}{{{}}}".format(
+                latex_escape(entry["category"]),
+                entry["level"],
+                latex_escape(entry["name"]),
+                entry["years"],
+                latex_escape(entry["comment"]),
+            )
+        )
+    latex_content = latex_content.replace(
+        "{skill_matrix}", "\n".join(skill_matrix_entries)
+    )
+else:
+    latex_content = latex_content.replace("{skill_matrix}", "")
 
 # Ensure directories exist
 os.makedirs("tmp", exist_ok=True)
